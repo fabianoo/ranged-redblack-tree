@@ -1,4 +1,6 @@
 # Ranged Red-Black Tree
+[![Build Status](https://travis-ci.com/fabianoo/ranged-redblack-tree.svg?branch=master)](https://travis-ci.com/fabianoo/ranged-redblack-tree)
+
 Algorithm for removing and inserting ranges from a given ranges set
 
 # The Coding Problem

@@ -11,6 +11,12 @@ public class RangedRedBlackTree<T extends Comparable<T>> implements Iterable<Ran
 
     private RangedRedBlackNode<T> root = NULL_VALUE;
 
+    public static <G extends Comparable<G>> RangedRedBlackTree<G> createTree(Collection<ClosedRange<G>> ranges) {
+        RangedRedBlackTree<G> rangedRedBlackTree = new RangedRedBlackTree<>();
+        ranges.forEach(rangedRedBlackTree::insert);
+        return rangedRedBlackTree;
+    }
+
     public RangedRedBlackTree() {
         root.setLeft(NULL_VALUE);
         root.setRight(NULL_VALUE);
@@ -31,20 +37,20 @@ public class RangedRedBlackTree<T extends Comparable<T>> implements Iterable<Ran
         return ranges;
     }
 
-    private void leftRotate(RangedRedBlackNode<T> x) {
+    private void leftRotate(RangedRedBlackNode<T> node) {
         RangedRedBlackNode<T> y;
-        y = x.getRight();
-        x.setRight(y.getLeft());
+        y = node.getRight();
+        node.setRight(y.getLeft());
 
-        if (!isNullValue(y.getLeft())) y.getLeft().setParent(x);
-        y.setParent(x.getParent());
+        if (!isNullValue(y.getLeft())) y.getLeft().setParent(node);
+        y.setParent(node.getParent());
 
-        if (isNullValue(x.getParent())) root = y;
-        else if (x.getParent().getLeft() == x) x.getParent().setLeft(y);
-        else x.getParent().setRight(y);
+        if (isNullValue(node.getParent())) root = y;
+        else if (node.getParent().getLeft() == node) node.getParent().setLeft(y);
+        else node.getParent().setRight(y);
 
-        y.setLeft(x);
-        x.setParent(y);
+        y.setLeft(node);
+        node.setParent(y);
     }
 
     private void rightRotate(RangedRedBlackNode<T> y) {
@@ -91,7 +97,12 @@ public class RangedRedBlackTree<T extends Comparable<T>> implements Iterable<Ran
         node.setRight(NULL_VALUE);
         node.setRed();
 
+        updateMaxEndValue(node);
         insertFixup(node);
+    }
+
+    private void updateMaxEndValue(ClosedRange<T> range) {
+        RangedRedBlackNode<T> node = findFirstIntersection(range);
         updateMaxEndValue(node);
     }
 
@@ -99,45 +110,45 @@ public class RangedRedBlackTree<T extends Comparable<T>> implements Iterable<Ran
         T childMaxValue = node.getMaxEndValueOfChilds();
         if (childMaxValue != null && node.getMaxEndValue().compareTo(childMaxValue) < 0) {
             node.setMaxEndValue(childMaxValue);
-            if (isNullValue(node.getParent())) {
-                updateMaxEndValue(node.getParent());
-            }
+        }
+        if (!isNullValue(node.getParent())) {
+            updateMaxEndValue(node.getParent());
         }
     }
 
-    private void insertFixup(RangedRedBlackNode<T> z) {
+    private void insertFixup(RangedRedBlackNode<T> node) {
         RangedRedBlackNode<T> y = NULL_VALUE;
-        while (z.getParent().isRed()) {
+        while (node.getParent().isRed()) {
 
-            if (z.getParent() == z.getParent().getParent().getLeft()) {
-                y = z.getParent().getParent().getRight();
+            if (node.getParent() == node.getParent().getParent().getLeft()) {
+                y = node.getParent().getParent().getRight();
                 if (y.isRed()) {
-                    z.getParent().setBlack();
+                    node.getParent().setBlack();
                     y.setBlack();
-                    z.getParent().getParent().setRed();
-                    z = z.getParent().getParent();
-                } else if (z == z.getParent().getRight()) {
-                    z = z.getParent();
-                    leftRotate(z);
+                    node.getParent().getParent().setRed();
+                    node = node.getParent().getParent();
+                } else if (node == node.getParent().getRight()) {
+                    node = node.getParent();
+                    leftRotate(node);
                 } else {
-                    z.getParent().setBlack();
-                    z.getParent().getParent().setRed();
-                    rightRotate(z.getParent().getParent());
+                    node.getParent().setBlack();
+                    node.getParent().getParent().setRed();
+                    rightRotate(node.getParent().getParent());
                 }
             } else {
-                y = z.getParent().getParent().getLeft();
+                y = node.getParent().getParent().getLeft();
                 if (y.isRed()) {
-                    z.getParent().setBlack();
+                    node.getParent().setBlack();
                     y.setBlack();
-                    z.getParent().getParent().setRed();
-                    z = z.getParent().getParent();
-                } else if (z == z.getParent().getLeft()) {
-                    z = z.getParent();
-                    rightRotate(z);
+                    node.getParent().getParent().setRed();
+                    node = node.getParent().getParent();
+                } else if (node == node.getParent().getLeft()) {
+                    node = node.getParent();
+                    rightRotate(node);
                 } else {
-                    z.getParent().setBlack();
-                    z.getParent().getParent().setRed();
-                    leftRotate(z.getParent().getParent());
+                    node.getParent().setBlack();
+                    node.getParent().getParent().setRed();
+                    leftRotate(node.getParent().getParent());
                 }
             }
         }
@@ -175,11 +186,15 @@ public class RangedRedBlackTree<T extends Comparable<T>> implements Iterable<Ran
         anotherTemp.setParent(temp.getParent());
 
         if (isNullValue(temp.getParent())) root = anotherTemp;
-        else if (!isNullValue(temp.getParent().getLeft()) && temp.getParent().getLeft() == temp) temp.getParent().setLeft(anotherTemp);
-        else if (!isNullValue(temp.getParent().getRight()) && temp.getParent().getRight() == temp) temp.getParent().setRight(anotherTemp);
+        else if (!isNullValue(temp.getParent().getLeft()) && temp.getParent().getLeft() == temp)
+            temp.getParent().setLeft(anotherTemp);
+        else if (!isNullValue(temp.getParent().getRight()) && temp.getParent().getRight() == temp)
+            temp.getParent().setRight(anotherTemp);
 
         if (temp != node) node.setKey(temp.getKey());
         if (temp.isBlack()) removeFixup(anotherTemp);
+
+        this.updateMaxEndValue(node);
     }
 
     private void removeFixup(RangedRedBlackNode<T> node) {
@@ -258,8 +273,9 @@ public class RangedRedBlackTree<T extends Comparable<T>> implements Iterable<Ran
         while (!isNullValue(current)) {
             if (current.getMaxEndValue().compareTo(range.getStart()) <= 0) break;
             else if (current.getKey().overlaps(range)) return current;
-            else if (current.getLeft().getMaxEndValue().compareTo(range.getStart()) > 0) current = current.getLeft();
-            else current = current.getLeft();
+            else if (!isNullValue(current.getLeft()) && current.getLeft().getMaxEndValue().compareTo(range.getStart()) > 0)
+                current = current.getLeft();
+            else current = current.getRight();
         }
 
         return null;
@@ -291,11 +307,5 @@ public class RangedRedBlackTree<T extends Comparable<T>> implements Iterable<Ran
 
     private boolean isNullValue(RangedRedBlackNode node) {
         return RangedRedBlackNode.isNullValue(node);
-    }
-
-    public void printOrderedNodes() {
-        for (RangedRedBlackNode<T> range : this) {
-            System.out.println(range.getKey());
-        }
     }
 }

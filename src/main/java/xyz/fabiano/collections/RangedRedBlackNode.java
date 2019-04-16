@@ -92,6 +92,7 @@ public class RangedRedBlackNode<T extends Comparable> {
     }
 
     public T getMaxEndValueOfChilds() {
+        //TODO: BUUUUUG
         if(!isNullValue(left) && !isNullValue(right)) {
             if(left.maxEndValue.compareTo(right.maxEndValue) > 0) {
                 return (T) left.maxEndValue;
@@ -107,6 +108,10 @@ public class RangedRedBlackNode<T extends Comparable> {
 
     public static boolean isNullValue(RangedRedBlackNode node) {
         return node == NULL_VALUE || node == null;
+    }
 
+    @Override
+    public String toString() {
+        return "RangedRedBlackNode{key=" + key + ", maxEndValue=" + maxEndValue + '}';
     }
 }

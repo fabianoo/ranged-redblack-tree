@@ -2,6 +2,7 @@ package xyz.fabiano.collections;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Objects;
 
 public class ClosedRange<T extends Comparable> implements Comparable {
 
@@ -52,8 +53,16 @@ public class ClosedRange<T extends Comparable> implements Comparable {
         return start.compareTo(range.start) <= 0 && end.compareTo(range.end) >= 0;
     }
 
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        ClosedRange<?> that = (ClosedRange<?>) o;
+        return Objects.equals(start, that.start) && Objects.equals(end, that.end);
+    }
+
     public boolean doesNotOverlap(ClosedRange<T> range) {
-        return this.start.compareTo(range.end) > 0 || range.start.compareTo(this.end) > 0;
+        return this.start.compareTo(range.end) >= 0 || range.start.compareTo(this.end) >= 0;
     }
 
     public boolean overlaps(ClosedRange<T> range) {
