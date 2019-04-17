@@ -28,10 +28,10 @@ Examples:
 
 As a naive linear search approach would not be acceptable due to its O(n) complexity being highly ineffective when the data gets bigger, I chose to use a Binary Search Tree based solution.
 For the tree representation, I chose to use an explicit over an implicit approach since it's more readable.
-Anyway, the benefits of an implicit approach, in this case, I think do not worth it.
+Anyway, the benefits of an implicit approach, in this case, I think would not be worth it.
 
 The solution is inspired in two classical algorithms: `The Red-Black Tree` and `The Interval Tree`.
-Therefore, we can benefit of a robust O(log n) algorithm with with the fail fast properties of the `Interval Tree`.
+Therefore, we can benefit of a robust O(log n) algorithm with the fail fast properties of the `Interval Tree`.
  
 Below, we can compare the Linear approach with the RB Tree:
 
@@ -47,11 +47,11 @@ This way, we garantee that our application will not struggle when the data set g
 
 # Technology
 
-Since I have little knowledge about Golang, I chose Java since it's a widespread language.
+Since I have little knowledge about Golang, I chose Java because it's a widespread language.
 
-While I'm using Java I could use the `java.util.TreeMap` implementation from its native API that is a `Black-Red Tree` implementation but I think it would undermine the proposal of this experiment.
+While using Java I would be able to use `java.util.TreeMap` implementation from its native API that is a `Black-Red Tree` implementation but I think it would undermine the proposal of this experiment.
 
-Also, I used generics so we can apply this `Red-Black Tree` for any kind of ranges as long as the type can be comparable (extending `Comparable` interface). Thus, it's highly extensible and we can benefit of that if we need to use the algorithm to another data type.
+Also, I used generics so we can apply this `Red-Black Tree` for any kind of ranges as long as the type can be comparable (extending `Comparable` interface). Thus, it's highly extensible and we can benefit from that if we need to use the same code to another data type.
 
 # Running and Testing
 
@@ -87,11 +87,11 @@ expect [(9:15..10:00),(10:15..11:00)] with [(9:00..11:00),(13:00..15:00) minus [
 ```
 
 ### Test structure
-There's an abstract class (`AbstractTesterHelper`) that can helps with the tests. Also, there's two implementations:
+There's an abstract class (`AbstractTesterHelper`) that can help with the tests. Also, there are two implementations:
  
  - `TestIntegerIntervals` that uses the `LocalTime` from `java.time` API.
  - `TestTimeIntervals` that uses `Integer`, so we can test with this kind of data.
  
 Each one of them will run assertions based on their respective file. If there's an error, it will throw an `AssertionException` with the details of the error, including the expected values and the actual ones. Otherwise, it will just log the success.
 
-**Note**: If you wish to run another test scenarios, just edit the files with the test cases and run the test suite: `./gradlew clean test`.
+**Note**: If you wish to run other test scenarios, just edit the files with the test cases and run the test suite: `./gradlew clean test`.

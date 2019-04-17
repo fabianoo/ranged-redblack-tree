@@ -31,7 +31,7 @@ public class RangedRedBlackTreeTest {
         redBlackTree.minus(new HalfClosedRange<>(Instant.parse("2019-12-03T10:00:00Z"), Instant.parse("2019-12-05T12:00:00Z")));
         redBlackTree.minus(new HalfClosedRange<>(Instant.parse("2019-12-05T11:00:00Z"), Instant.parse("2019-12-07T12:00:00Z")));
 
-        List<HalfClosedRange<Instant>> ranges = redBlackTree.everyNodeOrdered()
+        List<HalfClosedRange<Instant>> ranges = redBlackTree.everyNode()
                 .stream()
                 .map(RangedRedBlackNode::getKey)
                 .collect(Collectors.toList());
@@ -54,7 +54,7 @@ public class RangedRedBlackTreeTest {
         redBlackTree.minus(new HalfClosedRange<>(17, 25));
         redBlackTree.minus(new HalfClosedRange<>(25, 50));
 
-        List<HalfClosedRange<Integer>> ranges = redBlackTree.everyNodeOrdered()
+        List<HalfClosedRange<Integer>> ranges = redBlackTree.everyNode()
                 .stream()
                 .map(RangedRedBlackNode::getKey)
                 .collect(Collectors.toList());

@@ -44,9 +44,7 @@ public abstract class AbstractTesterHelper<T extends Comparable<T>> {
 
             testCase.subtrahend.forEach(tree::minus);
 
-            Collection<RangedRedBlackNode<T>> nodes = tree.everyNodeOrdered();
-
-            if (nodes.size() != testCase.difference.size()) ;
+            Collection<RangedRedBlackNode<T>> nodes = tree.everyNode();
 
             testCase.difference.forEach(expected -> {
                 if (nodes.stream().noneMatch(node -> node.getKey().equals(expected))) {

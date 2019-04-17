@@ -92,16 +92,15 @@ public class RangedRedBlackNode<T extends Comparable> {
     }
 
     public T getMaxEndValueOfChilds() {
-        //TODO: BUUUUUG
-        if(!isNullValue(left) && !isNullValue(right)) {
-            if(left.maxEndValue.compareTo(right.maxEndValue) > 0) {
-                return (T) left.maxEndValue;
+        if (!isNullValue(left) && !isNullValue(right)) {
+            if (left.maxEndValue.compareTo(right.maxEndValue) > 0) {
+                return left.maxEndValue;
             } else {
-                return (T) right.maxEndValue;
+                return right.maxEndValue;
             }
         } else {
-            if(left != null) return (T) left.maxEndValue;
-            else return (T) right.maxEndValue;
+            if (!isNullValue(left)) return left.maxEndValue;
+            else return right.maxEndValue;
         }
 
     }
