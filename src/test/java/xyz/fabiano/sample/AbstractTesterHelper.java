@@ -1,6 +1,6 @@
 package xyz.fabiano.sample;
 
-import xyz.fabiano.collections.ClosedRange;
+import xyz.fabiano.collections.HalfClosedRange;
 import xyz.fabiano.collections.RangedRedBlackNode;
 import xyz.fabiano.collections.RangedRedBlackTree;
 
@@ -27,7 +27,7 @@ public abstract class AbstractTesterHelper<T extends Comparable<T>> {
 
     private static final Logger LOGGER = Logger.getLogger(AbstractTesterHelper.class.getName());
 
-    private static final Pattern TEST_CASE_LINE_PATTERN = Pattern.compile("expect (\\[.+\\]) with (\\[.+\\]) minus (\\[.+\\])");
+    private static final Pattern TEST_CASE_LINE_PATTERN = Pattern.compile("expect (\\[.*\\]) with (\\[.*\\]) minus (\\[.*\\])");
     private static final Pattern RANGE_GROUP_PATTERN = Pattern.compile("[\\w:]+\\.{2}[\\w:]+");
     private static final String RANGE_SPLIT = "\\.\\.";
 
@@ -57,8 +57,8 @@ public abstract class AbstractTesterHelper<T extends Comparable<T>> {
         });
     }
 
-    private void thowAssertionError(Collection<ClosedRange<T>> expected, Collection<RangedRedBlackNode<T>> actual) {
-        List<ClosedRange<T>> actualRange = actual.stream().map(a -> a.getKey()).collect(Collectors.toList());
+    private void thowAssertionError(Collection<HalfClosedRange<T>> expected, Collection<RangedRedBlackNode<T>> actual) {
+        List<HalfClosedRange<T>> actualRange = actual.stream().map(a -> a.getKey()).collect(Collectors.toList());
         throw new AssertionError(" Does not satisfy the expectation: " +
                 "\nexpected: " + expected + "\n  actual: " + actualRange);
     }
@@ -69,9 +69,9 @@ public abstract class AbstractTesterHelper<T extends Comparable<T>> {
         Files.readAllLines(path).forEach(line -> {
             Matcher matcher = TEST_CASE_LINE_PATTERN.matcher(line);
             if (matcher.matches()) {
-                Collection<ClosedRange<T>> expected = loadGroups(matcher.group(1));
-                Collection<ClosedRange<T>> minuend = loadGroups(matcher.group(2));
-                Collection<ClosedRange<T>> subtrahend = loadGroups(matcher.group(3));
+                Collection<HalfClosedRange<T>> expected = loadGroups(matcher.group(1));
+                Collection<HalfClosedRange<T>> minuend = loadGroups(matcher.group(2));
+                Collection<HalfClosedRange<T>> subtrahend = loadGroups(matcher.group(3));
                 testCases.add(new TestCase<>(expected, minuend, subtrahend));
             }
         });
@@ -79,26 +79,26 @@ public abstract class AbstractTesterHelper<T extends Comparable<T>> {
         return testCases;
     }
 
-    private Collection<ClosedRange<T>> loadGroups(String groupStr) {
-        Collection<ClosedRange<T>> ranges = new ArrayList<>();
+    private Collection<HalfClosedRange<T>> loadGroups(String groupStr) {
+        Collection<HalfClosedRange<T>> ranges = new ArrayList<>();
 
         Matcher matcher = RANGE_GROUP_PATTERN.matcher(groupStr);
         while (matcher.find()) {
             String group = matcher.group();
             String[] split = group.split(RANGE_SPLIT);
-            ranges.add(new ClosedRange<>(convertData(split[0]), convertData(split[1])));
+            ranges.add(new HalfClosedRange<>(convertData(split[0]), convertData(split[1])));
         }
         return ranges;
     }
 
     class TestCase<C extends Comparable> {
-        private Collection<ClosedRange<C>> difference;
-        private Collection<ClosedRange<C>> minuend;
-        private Collection<ClosedRange<C>> subtrahend;
+        private Collection<HalfClosedRange<C>> difference;
+        private Collection<HalfClosedRange<C>> minuend;
+        private Collection<HalfClosedRange<C>> subtrahend;
 
-        public TestCase(Collection<ClosedRange<C>> difference,
-                        Collection<ClosedRange<C>> minuend,
-                        Collection<ClosedRange<C>> subtrahend) {
+        public TestCase(Collection<HalfClosedRange<C>> difference,
+                        Collection<HalfClosedRange<C>> minuend,
+                        Collection<HalfClosedRange<C>> subtrahend) {
 
             this.difference = difference;
             this.minuend = minuend;

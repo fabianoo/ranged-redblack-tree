@@ -11,7 +11,7 @@ public class RangedRedBlackTree<T extends Comparable<T>> implements Iterable<Ran
 
     private RangedRedBlackNode<T> root = NULL_VALUE;
 
-    public static <G extends Comparable<G>> RangedRedBlackTree<G> createTree(Collection<ClosedRange<G>> ranges) {
+    public static <G extends Comparable<G>> RangedRedBlackTree<G> createTree(Collection<HalfClosedRange<G>> ranges) {
         RangedRedBlackTree<G> rangedRedBlackTree = new RangedRedBlackTree<>();
         ranges.forEach(rangedRedBlackTree::insert);
         return rangedRedBlackTree;
@@ -69,7 +69,7 @@ public class RangedRedBlackTree<T extends Comparable<T>> implements Iterable<Ran
         y.setParent(x);
     }
 
-    public void insert(ClosedRange<T> key) {
+    public void insert(HalfClosedRange<T> key) {
         insert(new RangedRedBlackNode<>(key));
     }
 
@@ -101,7 +101,7 @@ public class RangedRedBlackTree<T extends Comparable<T>> implements Iterable<Ran
         insertFixup(node);
     }
 
-    private void updateMaxEndValue(ClosedRange<T> range) {
+    private void updateMaxEndValue(HalfClosedRange<T> range) {
         RangedRedBlackNode<T> node = findFirstIntersection(range);
         updateMaxEndValue(node);
     }
@@ -257,17 +257,17 @@ public class RangedRedBlackTree<T extends Comparable<T>> implements Iterable<Ran
         node.setBlack();
     }
 
-    public void minus(ClosedRange<T> range) {
+    public void minus(HalfClosedRange<T> range) {
         RangedRedBlackNode<T> intersection = findFirstIntersection(range);
         if (intersection == null) return;
 
-        Collection<ClosedRange<T>> newRanges = intersection.getKey().minus(range);
+        Collection<HalfClosedRange<T>> newRanges = intersection.getKey().minus(range);
         this.remove(intersection);
         newRanges.forEach(this::insert);
         this.minus(range);
     }
 
-    public RangedRedBlackNode<T> findFirstIntersection(ClosedRange<T> range) {
+    public RangedRedBlackNode<T> findFirstIntersection(HalfClosedRange<T> range) {
         RangedRedBlackNode<T> current = root;
 
         while (!isNullValue(current)) {
@@ -291,7 +291,7 @@ public class RangedRedBlackTree<T extends Comparable<T>> implements Iterable<Ran
         return getGreaterThan(root, node.getKey());
     }
 
-    private List<RangedRedBlackNode<T>> getGreaterThan(RangedRedBlackNode<T> node, ClosedRange<T> key) {
+    private List<RangedRedBlackNode<T>> getGreaterThan(RangedRedBlackNode<T> node, HalfClosedRange<T> key) {
         List<RangedRedBlackNode<T>> list = new ArrayList<>();
         if (isNullValue(node)) {
             return list;

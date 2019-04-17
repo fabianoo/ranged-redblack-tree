@@ -7,7 +7,7 @@ public class RangedRedBlackNode<T extends Comparable> {
 
     static final RangedRedBlackNode NULL_VALUE = new RangedRedBlackNode<>();
 
-    private ClosedRange<T> key;
+    private HalfClosedRange<T> key;
     private T maxEndValue;
 
     private RangedRedBlackNode<T> parent;
@@ -21,17 +21,17 @@ public class RangedRedBlackNode<T extends Comparable> {
         right = null;
     }
 
-    RangedRedBlackNode(ClosedRange<T> key) {
+    RangedRedBlackNode(HalfClosedRange<T> key) {
         this();
         this.key = key;
         this.maxEndValue = key.getEnd();
     }
 
-    public ClosedRange<T> getKey() {
+    public HalfClosedRange<T> getKey() {
         return key;
     }
 
-    public void setKey(ClosedRange<T> key) {
+    public void setKey(HalfClosedRange<T> key) {
         this.key = key;
     }
 

@@ -2,4 +2,4 @@ language: java
 install: true
 
 script:
-  - ./gradlew test
+  - ./gradlew clean test
